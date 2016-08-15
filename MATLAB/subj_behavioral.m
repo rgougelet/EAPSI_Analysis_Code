@@ -281,12 +281,33 @@ for blockPathInd = 1:length(blockPaths)
 	text_onsets = sortrows([text_fly_onsets, text_rep_onsets]');
 	text_onsets_ones_zeros = [text_fly_onsets_ones, text_rep_onsets_zeros]';
 	sorted = sortrows(text_onsets_ones_zeros);
+	
+	
 	%%
 	xplane_time_diff = diff(xplane_time);
-	plot(xplane_time_diff);
+% 	plot(xplane_time_diff);
+	xplane_srate = 1000000/median(diff(xplane_time));
+	xplane_period_inUs = median(diff(xplane_time));
 % 	plot(sorted);
 	% Loop through text events/beeps
-	% Loop through xplane samples
+	% Loop through xplane samples (events)
+	xplane_time_zMs = (xplane_time-xplane_time(1))/1000;
+	trans = [];
+	for xplane_marker_ind = 2:length(xplane_markers)
+		if xplane_markers(xplane_marker_ind-1) ~= xplane_markers(xplane_marker_ind)
+			if xplane_markers(xplane_marker_ind) == 0 % this is either first start flying/replay/
+				trans = [trans xplane_markers(xplane_marker_ind-1) xplane_markers(xplane_marker_ind)];
+			end
+		end
+
+% 		if isFirstChange == 1
+% 			[xplane_markers(xplane_marker_ind-1), xplane_markers(xplane_marker_ind)]
+% 			isFirstChange = 0;
+% 		end
+		
+% 		xplane_time_zMs(xplane_marker_ind)/1000
+	end
+	
 	% If xplane_sample_time == text_event_time, check if xplane marker
 	% is nearby, if not, add in text event and fill in missing data
 	
